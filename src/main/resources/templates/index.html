@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!--user main page-->
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="Content-Language" content="zh-CN">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>Url shorten app</title>
+
+    <!--    import jquery, bootstrap and datatable source by cdn-->
+    <script th:src="@{https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js}"></script>
+    <link href="https://cdn.bootcss.com/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <script src="https://cdn.bootcss.com/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="http://cdn.datatables.net/1.10.15/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="http://cdn.datatables.net/1.10.15/js/jquery.dataTables.js"></script>
+
+    <style>
+        @media (min-width: 1200px) {
+            .container {
+                width: 751px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="modal fade" id="stat_modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&nbsp;&times;</span>
+                </button>
+                <h4 class="modal-title">我的链接</h4>
+            </div>
+            <div class="modal-body">
+
+                <table id="url_table" class="table table-bordered no-footer dataTable">
+                    <thead>
+                    <tr>
+                        <th>原始链接</th>
+                        <th>短链接</th>
+                        <th>访问数</th>
+                        <th>最后访问时间</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+
+            </div>
+            <div class="modal-footer">
+                <a id="cls_model" href="javascript:void(0)" class="btn btn-primary" data-dismiss="modal">关闭</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="container">
+    <br>
+    <h1 style="font-size: x-large;" align="center">短网址服务</h1><br>
+    <br>
+    <div class="row" th:if="${session.user}">
+        <div class="col-xs-12 col-md-12" align="right">
+            <button id="statBtn" class="btn btn-primary" >我的链接</button>
+            <a class="btn btn-info" href="/logout">登出</a>
+        </div>
+    </div>
+    <br>
+    <form id="url">
+        <div class="row">
+            <div class="col-xs-12 col-md-12">
+                    <textarea rows="5" class="form-control" placeholder="支持批量换行，按回车换行" id="longUrl"
+                              name="longUrl"></textarea>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-xs-12 col-md-12" align="center">
+                <button id="genBtn" type="button" class="btn btn-success">生成</button>
+                <button type="reset" class="btn btn-warning">重置</button>
+            </div>
+        </div>
+    </form>
+
+
+    <input th:value="${session.separate}" type="hidden" id="separate"/>
+
+    <span id="shortUrl" hidden="hidden" style="font-size: large;color: red"></span>
+</div>
+
+<script>
+
+
+
+    $(function () {
+        $("#genBtn").click(function () {
+            if($("#longUrl").val().length <= 0){
+                alert("链接不能为空");
+            }else {
+                $.ajax({
+                    url: "/createUrl",
+                    method: "POST",
+                    data: {"longUrl": $("#longUrl").val()},
+                    success: function (res) {
+                        res = JSON.parse(res);
+
+                        if (res.urlRes.flag){
+                            let urls = res.urlRes.data;
+                            $("#shortUrl").html(urls);
+                            $("#shortUrl").show();
+                        }
+                    }
+                })
+            }
+        })
+
+    // $("#statBtn").click(function () {
+    //     $.ajax({
+    //         url:
+    //         method:
+    //         success:
+    //     })
+    //
+    //     $("#stat_modal").modal();
+    // })
+
+
+
+
+    })
+</script>
+</body>
+</html>

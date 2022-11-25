@@ -1,0 +1,36 @@
+
+
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql:///bj2207?useSSL=false&useServerPrepStmts=true&characterEncoding=utf-8&serverTimezone=GMT
+    username: root
+    password: xujiuyu
+    devtools:
+      restart:
+        exclude: mapper/**
+        enabled: true
+  thymeleaf:
+    cache: false
+
+
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  mapper-locations: classpath:/mapper/*Mapper.xml
+  type-aliases-package: com.tty.entity
+  global-config:
+    db-config:
+      table-prefix: tbl_
+
+
+
+logging:
+  file:
+    path: /opt/java/log/ # logging file path
+    name: app.log # logging file name
+  level:
+    root: info # project root logging level
+    com:
+      tty: debug # com.tty package logging level
